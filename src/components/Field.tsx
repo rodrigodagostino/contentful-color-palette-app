@@ -1,18 +1,95 @@
-import React from 'react';
-import { PlainClientAPI } from 'contentful-management';
-import { Paragraph } from '@contentful/f36-components';
-import { FieldExtensionSDK } from '@contentful/app-sdk';
+import React, { useEffect, useState } from 'react'
+import { PlainClientAPI } from 'contentful-management'
+import { Button, Grid, Stack, Text } from '@contentful/f36-components'
+import { DoneIcon } from '@contentful/f36-icons'
+import { FieldExtensionSDK } from '@contentful/app-sdk'
+
+import { COLOR_TOKENS } from '../lib/definitions'
+import { ColorIdTokenType } from '../lib/types'
+import { getTextColor } from '../lib/utils'
 
 interface FieldProps {
-  sdk: FieldExtensionSDK;
-  cma: PlainClientAPI;
+  sdk: FieldExtensionSDK
+  cma: PlainClientAPI
 }
 
-const Field = (props: FieldProps) => {
+const Field = ({ sdk }: FieldProps) => {
+  const [selectedColor, setSelectedColor] = useState(
+    sdk.field.getValue() || undefined
+  )
+
+  useEffect(() => sdk.window.startAutoResizer(), [])
+
+  const selectColor = (colorId: ColorIdTokenType) => {
+    sdk.field.setValue(colorId)
+    setSelectedColor(colorId)
+  }
+
+  const slateRGBA = COLOR_TOKENS.slate.rgba
+
   // If you only want to extend Contentful's default editing experience
   // reuse Contentful's editor components
   // -> https://www.contentful.com/developers/docs/extensibility/field-editors/
-  return <Paragraph>Hello Entry Field Component</Paragraph>;
-};
+  return (
+    <>
+      <Grid className="color-palette" columns="repeat(8, 1fr)">
+        {Object.keys(COLOR_TOKENS).map(color => {
+          const { label, rgba } = COLOR_TOKENS[color as ColorIdTokenType]
+          return (
+            <Stack
+              flexDirection="column"
+              marginTop="spacingM"
+              marginBottom="spacingM"
+              spacing="spacingXs"
+            >
+              <Button
+                className="color-palette__button"
+                startIcon={
+                  selectedColor === color ? (
+                    <DoneIcon className="color-palette__button-icon" />
+                  ) : undefined
+                }
+                style={{
+                  width: '3.25rem',
+                  height: '3.25rem',
+                  borderRadius: '50%',
+                  color: getTextColor(rgba),
+                  backgroundColor: `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`,
+                  ...(color === 'transparent' && {
+                    backgroundImage:
+                      'linear-gradient(45deg, rgba(0,0,0,0.16) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.16) 75%, rgba(0,0,0,0.16)), linear-gradient(45deg, rgba(0,0,0,0.16) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.16) 75%, rgba(0,0,0,0.16))',
+                    backgroundSize: '1.25rem 1.25rem',
+                    backgroundPosition: '0 0, 0.625rem 0.625rem',
+                  }),
+                  textIndent: '-9999px',
+                }}
+                variant="secondary"
+                aria-pressed={selectedColor === color}
+                aria-label={`Color: ${label}`}
+                onClick={() => selectColor(color as ColorIdTokenType)}
+              />
+              <Text className="color-palette__button-text">{label}</Text>
+            </Stack>
+          )
+        })}
+      </Grid>
 
-export default Field;
+      <style>{`
+        .color-palette__button-icon {
+          width: 2rem;
+          height: 2rem;
+          padding: 0.325rem;
+          border-radius: 50%;
+          fill: currentColor;
+          background-color: rgba(${slateRGBA.r}, ${slateRGBA.g}, ${slateRGBA.b}, 0.12);
+        }
+
+        .color-palette__button-text {
+          text-align: center;
+        }
+      `}</style>
+    </>
+  )
+}
+
+export default Field
