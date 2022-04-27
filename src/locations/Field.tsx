@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { PlainClientAPI } from 'contentful-management'
+import { FieldExtensionSDK } from '@contentful/app-sdk';
+import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
 import { Button, Grid, Stack, Text } from '@contentful/f36-components'
 import { DoneIcon } from '@contentful/f36-icons'
-import { FieldExtensionSDK } from '@contentful/app-sdk'
 
 import { COLOR_TOKENS } from '../lib/definitions'
 import { ColorIdTokenType } from '../lib/types'
 import { getTextColor } from '../lib/utils'
 
-interface FieldProps {
-  sdk: FieldExtensionSDK
-  cma: PlainClientAPI
-}
+const Field = () => {
+  const sdk = useSDK<FieldExtensionSDK>();
 
-const Field = ({ sdk }: FieldProps) => {
   const [selectedColor, setSelectedColor] = useState(
     sdk.field.getValue() || undefined
   )
@@ -37,10 +34,10 @@ const Field = ({ sdk }: FieldProps) => {
           const { label, rgba } = COLOR_TOKENS[color as ColorIdTokenType]
           return (
             <Stack
-              flexDirection="column"
-              marginTop="spacingM"
-              marginBottom="spacingM"
-              spacing="spacingXs"
+            flexDirection="column"
+            marginTop="spacingM"
+            marginBottom="spacingM"
+            spacing="spacingXs"
             >
               <Button
                 className="color-palette__button"
