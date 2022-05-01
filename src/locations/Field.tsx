@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { FieldExtensionSDK } from '@contentful/app-sdk';
-import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
+import { FieldExtensionSDK } from '@contentful/app-sdk'
+import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit'
 import { Button, Grid, Stack, Text } from '@contentful/f36-components'
 import { DoneIcon } from '@contentful/f36-icons'
 
@@ -9,13 +9,16 @@ import { ColorIdTokenType } from '../lib/types'
 import { getTextColor } from '../lib/utils'
 
 const Field = () => {
-  const sdk = useSDK<FieldExtensionSDK>();
+  const sdk = useSDK<FieldExtensionSDK>()
 
   const [selectedColor, setSelectedColor] = useState(
     sdk.field.getValue() || undefined
   )
 
-  useEffect(() => sdk.window.startAutoResizer(), [])
+  useEffect(() => {
+    // This ensures our app has enough space to render
+    sdk.window.startAutoResizer()
+  })
 
   const selectColor = (colorId: ColorIdTokenType) => {
     sdk.field.setValue(colorId)
@@ -34,10 +37,10 @@ const Field = () => {
           const { label, rgba } = COLOR_TOKENS[color as ColorIdTokenType]
           return (
             <Stack
-            flexDirection="column"
-            marginTop="spacingM"
-            marginBottom="spacingM"
-            spacing="spacingXs"
+              flexDirection="column"
+              marginTop="spacingM"
+              marginBottom="spacingM"
+              spacing="spacingXs"
             >
               <Button
                 className="color-palette__button"
