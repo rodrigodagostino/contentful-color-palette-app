@@ -1,14 +1,15 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { AppExtensionSDK } from '@contentful/app-sdk';
-import { Heading, Form, Paragraph, Flex } from '@contentful/f36-components';
-import { css } from 'emotion';
+import { ConfigAppSDK } from '@contentful/app-sdk';
+import { Flex, Form, Heading, Paragraph } from '@contentful/f36-components';
 import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
+import { css } from 'emotion';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface AppInstallationParameters {}
 
 const ConfigScreen = () => {
   const [parameters, setParameters] = useState<AppInstallationParameters>({});
-  const sdk = useSDK<AppExtensionSDK>();
+  const sdk = useSDK<ConfigAppSDK>();
+
   /*
      To use the cma, inject it as follows.
      If it is not needed, you can remove the next line.

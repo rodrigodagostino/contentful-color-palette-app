@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { FieldExtensionSDK } from '@contentful/app-sdk'
+import { useEffect, useState } from 'react'
+import { FieldAppSDK } from '@contentful/app-sdk';
 import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit'
 import { Button, Grid, Stack, Text } from '@contentful/f36-components'
 import { DoneIcon } from '@contentful/f36-icons'
@@ -9,7 +9,7 @@ import { ColorIdTokenType } from '../lib/types'
 import { getTextColor } from '../lib/utils'
 
 const Field = () => {
-  const sdk = useSDK<FieldExtensionSDK>()
+  const sdk = useSDK<FieldAppSDK>()
 
   const [selectedColor, setSelectedColor] = useState(
     sdk.field.getValue() || undefined
